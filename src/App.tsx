@@ -1,13 +1,39 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 import Message from "./Message";
 import ListGroup from "./components/ListGroup";
+import Alert from "./components/Alert";
+import Button from "./components/Button";
+import Input from "./components/Input";
+import Label from "./components/Label";
 
 function App() {
   const [count, setCount] = useState(0);
   let items = ["Hà Nội", "TP Hồ Chí Minh", "Đà Nẵng", "Buôn Ma Thuột"];
   
+  const handleSelectItem = (item: string) => {
+        console.log(item);
+  }
+
+  const [alertVisiable, setAlertVisibility] = useState(false);
+
+  const [formValue, setFormValue] = useState({
+    email: ""
+  });
+
+  const handleChange = (event: { target: { name: any; value: any; }; }) => {
+    const {name, value} = event.target;
+    setFormValue((prevState) => {
+      return {
+        ...prevState,
+        [name]: value,
+      };
+    });
+  };
+
+  const { email } = formValue;
+
   return (
     <div className="App">
       <div>
@@ -23,20 +49,50 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
 
       <div>
         <Message />
       </div>
-      
+      <br></br>
+
       <div>
-        <ListGroup items={items} heading={"Cities"} />
+        <ListGroup items={items} heading={"Cities"} onSelectItem={handleSelectItem}/>
+      </div>
+      <br></br>
+
+      <div>
+        <Alert>
+          Hello <span>there</span>
+        </Alert>
+      </div>
+
+      <br></br>
+
+      <div>
+        {
+          alertVisiable &&
+          <Alert onClose={() => setAlertVisibility(false)}>
+            Alert visible by Button
+          </Alert>
+        }
+        <Button color="primary"
+          onClick={() => setAlertVisibility(true)}>
+          My Button
+        </Button>
+      </div>
+
+      <br></br>
+
+      <div>
+        <Label>Email</Label>
+        <Input 
+        id="email" 
+        name = "email" 
+        errorMessage=""
+        value={email}
+        onChange={() => handleChange}/>
+        <Button color="primary">Submit</Button>
       </div>
     </div>
   );
